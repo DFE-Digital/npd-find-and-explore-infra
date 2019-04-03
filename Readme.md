@@ -1,0 +1,1 @@
+# NPD Find & Explore Azure Resource Manager templates
