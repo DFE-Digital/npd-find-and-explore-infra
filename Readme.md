@@ -24,3 +24,26 @@ This ARM template and resource group contains the stateless and short-lived reso
 4. TODO The staging Redis instance
 5. TODO The staging blob store
 
+### Running the scripts
+
+First, you'll need to login:
+
+```bash
+az login
+```
+
+```bash
+az deployment validate \
+  --location westeurope \
+  --template-file 1_find-npd-data-persistent.json \
+  --parameters @_common.parameters.json \
+  --parameters @postgresql.parameters.json
+
+
+```
+
+
+> TODO steps -
+  1. deploy key vault 
+  1. deploy ARM template
+  2. configure pipeline to deploy to web app service
