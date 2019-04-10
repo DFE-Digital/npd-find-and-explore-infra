@@ -5,11 +5,8 @@
     "siteName": {
       "value": "find-npd-data"
     },
-    "postgresProductionAdministratorLogin": {
-      "value": "GEN-UNIQUE"
-    },
-    "postgresProductionAdministratorPassword": {
-      "value": "GEN-PASSWORD"
+    "location": {
+      "value": "West Europe"
     }
   }
 }
