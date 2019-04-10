@@ -55,6 +55,7 @@
     }
   },
   "variables": {
+    "siteNameSafe": "[replace(params('siteName'), '-', '')]",
     "location": "West Europe",
     "persistentResourceGroupName": "[concat(parameters('siteName'), '-persistent-resources')]",
 
@@ -69,6 +70,18 @@
       "location": "[variables('location')]",
       "name": "[variables('persistentResourceGroupName')]",
       "properties": {}
+    },
+    {
+      "name": "[concat(variables('siteNameSafe'), 'Registry')]",
+      "type": "Microsoft.ContainerRegistry/registries",
+      "location": "[variables('location')]",
+      "apiVersion": "2017-10-01",
+      "sku": {
+          "name": "Standard"
+      },
+      "properties": {
+          "adminUserEnabled": false
+      }
     },
     {
       "type": "Microsoft.Resources/deployments",
