@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "registrySku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "metadata": {
+        "description": "The SKU of the container registry."
+      }
+    },
+    "registryApiVersion": {
+      "type": "string",
+      "defaultValue": "2017-10-01",
+      "metadata": {
+        "description": "The API version of the container registry."
+      }
+    },
+    "adminUserEnabled": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "The value that indicates whether the admin user is enabled."
+      }
+    }
+  },
+  "variables": {
+    "siteNameSafe": "[replace(parameters('siteName'), '-', '')]"
+  },
+  "resources": [
+    {
+      "name": "[variables('siteNameSafe')]",
+      "type": "Microsoft.ContainerRegistry/registries",
+      "location": "[parameters('location')]",
+      "apiVersion": "[parameters('registryApiVersion')]",
+      "sku": {
+        "name": "[parameters('registrySku')]"
+      },
+      "properties": {
+        "adminUserEnabled": "[parameters('adminUserEnabled')]"
+      }
+    }
+  ]
+}

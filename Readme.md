@@ -38,6 +38,11 @@ az deployment create \
   --template-file 0_resource_group.json \
   --parameters @_common.parameters.json
 
+az deployment create \
+  --location westeurope \
+  --template-file 1_container_registry.json \
+  --parameters @_common.parameters.json
+
 
 ```
 
