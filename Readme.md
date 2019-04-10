@@ -43,7 +43,12 @@ az group deployment create \
   --template-file 1_container_registry.json \
   --parameters @_common.parameters.json
 
-
+az group deployment create \
+  --resource-group find-npd-data-persistent-resources \
+  --template-file 5_web_app_service.json \
+  --parameters @_common.parameters.json \
+  --parameters administratorLogin=npd_admin \
+  --parameters administratorLoginPassword=CHANGE_THIS_TO_A_VERY_SECURE_PASSWORD_^100%
 ```
 
 
