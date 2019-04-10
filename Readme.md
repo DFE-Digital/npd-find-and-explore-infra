@@ -35,11 +35,11 @@ az login
 ```bash
 az deployment create \
   --location westeurope \
-  --template-file 0_resource_group.json \
+  --template-file 0_resource_groups.json \
   --parameters @_common.parameters.json
 
-az deployment create \
-  --location westeurope \
+az group deployment create \
+  --resource-group find-npd-data-persistent-resources \
   --template-file 1_container_registry.json \
   --parameters @_common.parameters.json
 
