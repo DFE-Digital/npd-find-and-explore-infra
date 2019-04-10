@@ -33,11 +33,10 @@ az login
 ```
 
 ```bash
-az deployment validate \
+az deployment create \
   --location westeurope \
-  --template-file 1_find-npd-data-persistent.json \
-  --parameters @_common.parameters.json \
-  --parameters @postgresql.parameters.json
+  --template-file 0_resource_group.json \
+  --parameters @_common.parameters.json
 
 
 ```
