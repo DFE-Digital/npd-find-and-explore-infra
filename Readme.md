@@ -39,22 +39,32 @@ az deployment create \
   --parameters @_common.parameters.json
 
 az group deployment create \
-  --resource-group find-npd-data-persistent-resources \
+  --resource-group s112p01-find-npd-data-persistent-resources \
   --template-file 1_container_registry.json \
   --parameters @_common.parameters.json
 
 # Retrieve Azure Container Registry credentials:
-az acr credential show --name findnpddata
+AZ_CR_CRED_JSON=`az acr credential show --name findnpddata`
+AZ_CR_USERNAME=`echo $AZ_CR_CRED_JSON | jq '.["username"]'`
+AZ_CR_PASSWORD=`echo $AZ_CR_CRED_JSON | jq '.["passwords"][0]["value"]'`
 
+# TODO: existingKeyVaultId
+# TODO: existingKeyVaultSecretName
 az group deployment create \
-  --resource-group find-npd-data-persistent-resources \
+  --resource-group s112p01-find-npd-data-persistent-resources \
   --template-file 5_web_app_service.json \
   --parameters @_common.parameters.json \
   --parameters administratorLogin=npd_admin \
   --parameters administratorLoginPassword=CHANGE_THIS_TO_A_VERY_SECURE_PASSWORD_^100% \
-  --parameters dockerRegistryUsername=TODO_INSERT_REGISTRY_CREDENTIALS \
-  --parameters dockerRegistryPassword=TODO_INSERT_REGISTRY_CREDENTIALS \
-  --parameters railsMasterKey=TODO_COPY_FROM_RAILS
+  --parameters dockerRegistryUsername=$AZ_CR_USERNAME \
+  --parameters dockerRegistryPassword=$AZ_CR_PASSWORD \
+  --parameters railsMasterKey=TODO_COPY_FROM_RAILS \
+  --parameters customHostname=find-npd-data.education.gov.uk
+
+az group deployment create \
+  --resource-group s112p01-find-npd-data-persistent-resources \
+  --template-file 6_postgres_firewall.json \
+  --parameters @_common.parameters.json
 ```
 # Logs
 
