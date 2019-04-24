@@ -25,7 +25,13 @@
     },
     "databaseSkucapacity": {
       "type": "int",
-      "allowedValues": [2, 4, 8, 16, 32],
+      "allowedValues": [
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
       "defaultValue": 2,
       "metadata": {
         "description": "Azure database for PostgreSQL vCores capacity"
@@ -53,7 +59,10 @@
     },
     "databaseSkuSizeMB": {
       "type": "int",
-      "allowedValues": [102400, 51200],
+      "allowedValues": [
+        102400,
+        51200
+      ],
       "defaultValue": 51200,
       "metadata": {
         "description": "Azure database for PostgreSQL Sku Size "
@@ -61,7 +70,11 @@
     },
     "databaseSkuTier": {
       "type": "string",
-      "allowedValues": ["GeneralPurpose", "MemoryOptimized", "Basic"],
+      "allowedValues": [
+        "GeneralPurpose",
+        "MemoryOptimized",
+        "Basic"
+      ],
       "defaultValue": "GeneralPurpose",
       "metadata": {
         "description": "Azure database for PostgreSQL pricing tier"
@@ -69,7 +82,11 @@
     },
     "postgresqlVersion": {
       "type": "string",
-      "allowedValues": ["10", "9.5", "9.6"],
+      "allowedValues": [
+        "10",
+        "9.5",
+        "9.6"
+      ],
       "defaultValue": "10",
       "metadata": {
         "description": "PostgreSQL version"
@@ -89,36 +106,42 @@
         "description": "The ARM Template API version for the Postgres resource"
       }
     },
-    "dockerRegistryUrl" : {
+    "dockerRegistryUrl": {
       "type": "string",
       "defaultValue": "https://findnpddata.azurecr.io",
       "metadata": {
         "description": "The Docker container registry to use for the Web App"
       }
     },
-    "dockerRegistryUsername" : {
+    "dockerRegistryUsername": {
       "type": "string",
       "metadata": {
         "description": "The Docker container registry username"
       }
     },
-    "dockerRegistryPassword" : {
+    "dockerRegistryPassword": {
       "type": "string",
       "metadata": {
         "description": "The Docker container registry password"
       }
     },
-    "dockerImageName" : {
+    "dockerImageName": {
       "type": "string",
       "defaultValue": "findnpddata.azurecr.io/dfedigitalnpdfindandexplore_web:latest",
       "metadata": {
         "description": "The Docker image to use for the Web App"
       }
     },
-    "railsMasterKey" : {
+    "railsMasterKey": {
       "type": "string",
       "metadata": {
         "description": "The RAILS_MASTER_KEY for the Rails app"
+      }
+    },
+    "customHostname": {
+      "type": "string",
+      "metadata": {
+        "description": "The custom hostname that you wish to add."
       }
     }
   },
@@ -175,15 +198,17 @@
         }
       ]
     },
-
     {
       "type": "Microsoft.Web/sites",
       "name": "[parameters('siteName')]",
       "apiVersion": "2016-03-01",
       "location": "[parameters('location')]",
       "kind": "app,linux,container",
-      "dependsOn": ["[variables('hostingPlanName')]"],
+      "dependsOn": [
+        "[variables('hostingPlanName')]"
+      ],
       "properties": {
+        "httpsOnly": true,
         "siteConfig": {
           "linuxFxVersion": "[concat('DOCKER|', parameters('dockerImageName'))]",
           "alwaysOn": true,
@@ -286,6 +311,17 @@
         "Name": "P1v2"
       },
       "kind": "linux"
+    },
+    {
+      "type":"Microsoft.Web/sites/hostnameBindings",
+      "name":"[concat(parameters('siteName'), '/', parameters('customHostname'))]",
+      "apiVersion":"2016-03-01",
+      "location":"[resourceGroup().location]",
+      "properties":{
+      },
+      "dependsOn": [
+          "[concat('Microsoft.Web/sites/',parameters('siteName'))]"
+      ]
     }
   ]
 }
