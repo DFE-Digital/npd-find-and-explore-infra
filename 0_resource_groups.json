@@ -10,19 +10,11 @@
     }
   },
   "variables": {
-    "persistentResourceGroupName": "[concat(parameters('siteName'), '-persistent-resources')]",
-    "transientResourceGroupName": "[concat(parameters('siteName'), '-transient-resources')]"
+    "persistentResourceGroupName": "[concat(parameters('siteName'), '-persistent-resources')]"
   },
   "resources": [
     {
       "name": "[variables('persistentResourceGroupName')]",
-      "type": "Microsoft.Resources/resourceGroups",
-      "apiVersion": "2018-05-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "name": "[variables('transientResourceGroupName')]",
       "type": "Microsoft.Resources/resourceGroups",
       "apiVersion": "2018-05-01",
       "location": "[parameters('location')]",
