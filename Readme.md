@@ -33,17 +33,44 @@ az login
 ```
 
 ```bash
-az deployment validate \
+az deployment create \
   --location westeurope \
-  --template-file 1_find-npd-data-persistent.json \
+  --template-file 0_resource_groups.json \
+  --parameters @_common.parameters.json
+
+az group deployment create \
+  --resource-group find-npd-data-persistent-resources \
+  --template-file 1_container_registry.json \
+  --parameters @_common.parameters.json
+
+# Retrieve Azure Container Registry credentials:
+az acr credential show --name findnpddata
+
+az group deployment create \
+  --resource-group find-npd-data-persistent-resources \
+  --template-file 5_web_app_service.json \
   --parameters @_common.parameters.json \
-  --parameters @postgresql.parameters.json
+  --parameters administratorLogin=npd_admin \
+  --parameters administratorLoginPassword=CHANGE_THIS_TO_A_VERY_SECURE_PASSWORD_^100% \
+  --parameters dockerRegistryUsername=TODO_INSERT_REGISTRY_CREDENTIALS \
+  --parameters dockerRegistryPassword=TODO_INSERT_REGISTRY_CREDENTIALS \
+  --parameters railsMasterKey=TODO_COPY_FROM_RAILS
+```
+# Logs
 
+```bash
+az webapp log tail --resource-group find-npd-data-persistent-resources --name find-npd-data
+```
+# SSH into production
 
+> TODO This hung for me in testing... it needs an extra process in the Docker container :/
+
+```bash
+az webapp ssh --resource-group find-npd-data-persistent-resources --name find-npd-data
 ```
 
-
+# TODO!
 > TODO steps -
-  1. deploy key vault 
-  1. deploy ARM template
-  2. configure pipeline to deploy to web app service
+- [ ] deploy key vault 
+- [ ] deploy ARM template
+- [ ] configure pipeline to deploy to web app service
