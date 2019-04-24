@@ -175,19 +175,6 @@
       "type": "Microsoft.DBforPostgreSQL/servers",
       "resources": [
         {
-          "type": "firewallrules",
-          "apiVersion": "[parameters('postgresAzureAPIVersion')]",
-          "location": "[parameters('location')]",
-          "name": "[concat(variables('serverName'),'firewall')]",
-          "properties": {
-            "startIpAddress": "0.0.0.0",
-            "endIpAddress": "255.255.255.255"
-          },
-          "dependsOn": [
-            "[concat('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))]"
-          ]
-        },
-        {
           "name": "[variables('databaseName')]",
           "type": "databases",
           "apiVersion": "[parameters('postgresAzureAPIVersion')]",
