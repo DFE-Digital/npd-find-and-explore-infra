@@ -2,6 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "resourcePrefix": {
+      "type": "string"
+    },
     "siteName": {
       "type": "string",
       "metadata": {
@@ -147,8 +150,8 @@
   },
   "variables": {
     "databaseName": "[replace(parameters('siteName'), '-', '_')]",
-    "serverName": "[concat(parameters('siteName'), '-pgserver')]",
-    "hostingPlanName": "[concat(parameters('siteName'), 'serviceplan')]"
+    "serverName": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver')]",
+    "hostingPlanName": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), 'serviceplan')]"
   },
   "resources": [
     {
@@ -200,7 +203,7 @@
     },
     {
       "type": "Microsoft.Web/sites",
-      "name": "[parameters('siteName')]",
+      "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'))]",
       "apiVersion": "2016-03-01",
       "location": "[parameters('location')]",
       "kind": "app,linux,container",
@@ -208,6 +211,9 @@
         "[variables('hostingPlanName')]"
       ],
       "properties": {
+        "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'))]",
+        "serverFarmId": "[variables('hostingPlanName')]",
+        "hostingEnvironment": "",
         "httpsOnly": true,
         "siteConfig": {
           "linuxFxVersion": "[concat('DOCKER|', parameters('dockerImageName'))]",
@@ -288,10 +294,7 @@
               "type": "PostgreSQL"
             }
           ]
-        },
-        "name": "[parameters('siteName')]",
-        "serverFarmId": "[variables('hostingPlanName')]",
-        "hostingEnvironment": ""
+        }
       }
     },
     {
@@ -320,7 +323,7 @@
       "properties":{
       },
       "dependsOn": [
-          "[concat('Microsoft.Web/sites/',parameters('siteName'))]"
+          "[concat('Microsoft.Web/sites/',parameters('resourcePrefix'), '-', parameters('siteName'))]"
       ]
     }
   ]

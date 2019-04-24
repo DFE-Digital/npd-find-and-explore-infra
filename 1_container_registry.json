@@ -2,6 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "resourcePrefix": {
+      "type": "string"
+    },
     "siteName": {
       "type": "string"
     },
@@ -35,7 +38,7 @@
   },
   "resources": [
     {
-      "name": "[variables('siteNameSafe')]",
+      "name": "[concat(parameters('resourcePrefix'), '_' ,variables('siteNameSafe'))]",
       "type": "Microsoft.ContainerRegistry/registries",
       "location": "[parameters('location')]",
       "apiVersion": "[parameters('registryApiVersion')]",
