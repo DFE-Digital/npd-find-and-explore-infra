@@ -33,38 +33,49 @@ az login
 ```
 
 ```bash
+POSTGRES_ADMIN_PASSWORD=CHANGE_THIS_TO_A_VERY_SECURE_PASSWORD_^100%
+POSTGRES_ADMIN_PASSWORD_STAGING=CHANGE_THIS_TO_A_DIFFERENT_VERY_SECURE_PASSWORD_^100%
+RAILS_MASTER_KEY=TODO_COPY_FROM_RAILS 
+
 az deployment create \
   --location westeurope \
   --template-file 0_resource_groups.json \
   --parameters @_common.parameters.json
 
+RESOURCE_GROUP=s112p01-find-npd-data-persistent-resources
+
 az group deployment create \
-  --resource-group s112p01-find-npd-data-persistent-resources \
+  --resource-group $RESOURCE_GROUP \
   --template-file 1_container_registry.json \
   --parameters @_common.parameters.json
 
 # Retrieve Azure Container Registry credentials:
-AZ_CR_CRED_JSON=`az acr credential show --name findnpddata`
-AZ_CR_USERNAME=`echo $AZ_CR_CRED_JSON | jq '.["username"]'`
-AZ_CR_PASSWORD=`echo $AZ_CR_CRED_JSON | jq '.["passwords"][0]["value"]'`
+AZ_CR_CRED_JSON=`az acr credential show --name s112p01findnpddata`
+AZ_CR_USERNAME=`echo $AZ_CR_CRED_JSON | jq -r '.["username"]'`
+AZ_CR_PASSWORD=`echo $AZ_CR_CRED_JSON | jq -r '.["passwords"][0]["value"]'`
 
 # TODO: existingKeyVaultId
 # TODO: existingKeyVaultSecretName
 az group deployment create \
-  --resource-group s112p01-find-npd-data-persistent-resources \
+  --resource-group $RESOURCE_GROUP \
   --template-file 5_web_app_service.json \
   --parameters @_common.parameters.json \
   --parameters administratorLogin=npd_admin \
-  --parameters administratorLoginPassword=CHANGE_THIS_TO_A_VERY_SECURE_PASSWORD_^100% \
+  --parameters administratorLoginPassword=$POSTGRES_ADMIN_PASSWORD \
+  --parameters stagingAdministratorLoginPassword=$POSTGRES_ADMIN_PASSWORD_STAGING \
   --parameters dockerRegistryUsername=$AZ_CR_USERNAME \
   --parameters dockerRegistryPassword=$AZ_CR_PASSWORD \
-  --parameters railsMasterKey=TODO_COPY_FROM_RAILS \
+  --parameters railsMasterKey=$RAILS_MASTER_KEY \
   --parameters customHostname=find-npd-data.education.gov.uk
 
+# Retrieve WebApp outbound IP addresses 
+AZ_WEBAPP_IPS=`az webapp show --resource-group $RESOURCE_GROUP --name s112p01-find-npd-data | jq -r '.["possibleOutboundIpAddresses"]'`
+
 az group deployment create \
-  --resource-group s112p01-find-npd-data-persistent-resources \
+  --resource-group $RESOURCE_GROUP \
   --template-file 6_postgres_firewall.json \
-  --parameters @_common.parameters.json
+  --parameters @_common.parameters.json \
+  --parameters webAppIPAddresses=$AZ_WEBAPP_IPS
 ```
 # Logs
 
