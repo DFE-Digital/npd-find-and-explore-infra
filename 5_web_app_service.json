@@ -327,6 +327,93 @@
       }
     },
     {
+      "type": "Microsoft.Web/sites/slots",
+      "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '/', parameters('resourcePrefix'), '-staging')]",
+      "apiVersion": "2016-03-01",
+      "location": "[parameters('location')]",
+      "kind": "app,linux,container",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/Sites', concat(parameters('resourcePrefix'), '-', parameters('siteName')))]"
+      ],
+      "properties": {
+        "serverFarmId": "[variables('hostingPlanName')]",
+        "hostingEnvironment": "",
+        "httpsOnly": true,
+        "siteConfig": {
+          "linuxFxVersion": "[concat('DOCKER|', parameters('dockerImageName'))]",
+          "alwaysOn": true,
+          "appSettings": [
+            {
+              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+              "value": "false"
+            },
+            {
+              "name": "DOCKER_CUSTOM_IMAGE_NAME",
+              "value": "[parameters('dockerImageName')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[parameters('dockerRegistryUrl')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "slotSetting": false,
+              "value": "[parameters('dockerRegistryUsername')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "slotSetting": false,
+              "value": "[parameters('dockerRegistryPassword')]"
+            },
+            {
+              "name": "RAILS_ENV",
+              "slotSetting": false,
+              "value": "production"
+            },
+            {
+              "name": "NODE_ENV",
+              "slotSetting": false,
+              "value": "production"
+            },
+            {
+              "name": "RAILS_LOG_TO_STDOUT",
+              "slotSetting": false,
+              "value": "true"
+            },
+            {
+              "name": "RAILS_SERVE_STATIC_FILES",
+              "slotSetting": false,
+              "value": "true"
+            },
+            {
+              "name": "RAILS_MASTER_KEY",
+              "slotSetting": false,
+              "value": "[parameters('railsMasterKey')]"
+            },
+            {
+              "name": "POSTGRES_HOST",
+              "slotSetting": false,
+              "value": "[reference(resourceId('Microsoft.DBforPostgreSQL/servers',concat(variables('serverName'), '-staging')), parameters('postgresAzureAPIVersion')).fullyQualifiedDomainName]"
+            },
+            {
+              "name": "POSTGRES_DB",
+              "slotSetting": false,
+              "value": "[variables('databaseName')]"
+            },
+            {
+              "name": "POSTGRES_USER",
+              "slotSetting": false,
+              "value": "[concat(parameters('administratorLogin'),'@',variables('serverName'), '-staging')]"
+            },
+            {
+              "name": "POSTGRES_PASSWORD",
+              "slotSetting": false,
+              "value": "[parameters('stagingAdministratorLoginPassword')]"
+            }
+          ]
+        }
+      }
+    },
     {
       "apiVersion": "2016-09-01",
       "name": "[variables('hostingPlanName')]",
@@ -344,17 +431,6 @@
         "Name": "P1v2"
       },
       "kind": "linux"
-    },
-    {
-      "type":"Microsoft.Web/sites/hostnameBindings",
-      "name":"[concat(parameters('siteName'), '/', parameters('customHostname'))]",
-      "apiVersion":"2016-03-01",
-      "location":"[resourceGroup().location]",
-      "properties":{
-      },
-      "dependsOn": [
-          "[concat('Microsoft.Web/sites/',parameters('resourcePrefix'), '-', parameters('siteName'))]"
-      ]
     }
   ]
 }
