@@ -49,6 +49,19 @@
         "startIpAddress": "[variables('inboundIPAddressArray')[copyIndex()]]",
         "endIpAddress": "[variables('inboundIPAddressArray')[copyIndex()]]"
       }
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
+      "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver-staging/fwRule-', copyIndex())]",
+      "apiVersion": "[parameters('postgresAzureAPIVersion')]",
+      "copy": {
+        "name": "iterator",
+        "count": "[length(variables('inboundIPAddressArray'))]"
+      },
+      "properties": {
+        "startIpAddress": "[variables('inboundIPAddressArray')[copyIndex()]]",
+        "endIpAddress": "[variables('inboundIPAddressArray')[copyIndex()]]"
+      }
     }
   ]
 }

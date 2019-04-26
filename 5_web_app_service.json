@@ -26,6 +26,14 @@
         "description": "Database administrator password"
       }
     },
+    "stagingAdministratorLoginPassword": {
+      "type": "securestring",
+      "minLength": 8,
+      "maxLength": 128,
+      "metadata": {
+        "description": "Database administrator password"
+      }
+    },
     "databaseSkucapacity": {
       "type": "int",
       "allowedValues": [
@@ -111,7 +119,7 @@
     },
     "dockerRegistryUrl": {
       "type": "string",
-      "defaultValue": "https://findnpddata.azurecr.io",
+      "defaultValue": "https://s112p01findnpddata.azurecr.io",
       "metadata": {
         "description": "The Docker container registry to use for the Web App"
       }
@@ -130,7 +138,7 @@
     },
     "dockerImageName": {
       "type": "string",
-      "defaultValue": "findnpddata.azurecr.io/dfedigitalnpdfindandexplore_web:latest",
+      "defaultValue": "s112p01findnpddata.azurecr.io/dfedigitalnpdfindandexplore_web:latest",
       "metadata": {
         "description": "The Docker image to use for the Web App"
       }
@@ -184,6 +192,40 @@
           },
           "dependsOn": [
             "[concat('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))]"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "[parameters('postgresAzureAPIVersion')]",
+      "kind": "",
+      "location": "[parameters('location')]",
+      "name": "[concat(variables('serverName'), '-staging')]",
+      "properties": {
+        "version": "[parameters('postgresqlVersion')]",
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('stagingAdministratorLoginPassword')]",
+        "storageMB": "[parameters('databaseSkuSizeMB')]"
+      },
+      "sku": {
+        "name": "[parameters('databaseSkuName')]",
+        "tier": "[parameters('databaseSkuTier')]",
+        "capacity": "[parameters('databaseSkucapacity')]",
+        "size": "[parameters('databaseSkuSizeMB')]",
+        "family": "Gen5"
+      },
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "resources": [
+        {
+          "name": "[variables('databaseName')]",
+          "type": "databases",
+          "apiVersion": "[parameters('postgresAzureAPIVersion')]",
+          "properties": {
+            "charset": "utf8",
+            "collation": "und-x-icu"
+          },
+          "dependsOn": [
+            "[concat('Microsoft.DBforPostgreSQL/servers/', variables('serverName'), '-staging')]"
           ]
         }
       ]
@@ -284,6 +326,7 @@
         }
       }
     },
+    {
     {
       "apiVersion": "2016-09-01",
       "name": "[variables('hostingPlanName')]",
