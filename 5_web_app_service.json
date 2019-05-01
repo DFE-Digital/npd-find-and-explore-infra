@@ -369,7 +369,7 @@
             {
               "name": "RAILS_ENV",
               "slotSetting": false,
-              "value": "production"
+              "value": "staging"
             },
             {
               "name": "NODE_ENV",
