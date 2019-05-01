@@ -205,7 +205,8 @@
         "version": "[parameters('postgresqlVersion')]",
         "administratorLogin": "[parameters('administratorLogin')]",
         "administratorLoginPassword": "[parameters('stagingAdministratorLoginPassword')]",
-        "storageMB": "[parameters('databaseSkuSizeMB')]"
+        "storageMB": "[parameters('databaseSkuSizeMB')]",
+        "backupRetentionDays": 31
       },
       "sku": {
         "name": "[parameters('databaseSkuName')]",
