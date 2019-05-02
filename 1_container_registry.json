@@ -38,7 +38,7 @@
   },
   "resources": [
     {
-      "name": "[concat(parameters('resourcePrefix'), variables('siteNameSafe'))]",
+      "name": "[concat('acr', parameters('resourcePrefix'), variables('siteNameSafe'))]",
       "type": "Microsoft.ContainerRegistry/registries",
       "location": "[parameters('location')]",
       "apiVersion": "[parameters('registryApiVersion')]",

@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourcePrefix": {
-      "value": "s112p01"
+      "value": "t1pr"
     },
     "siteName": {
-      "value": "find-npd-data"
+      "value": "npdfindandexplore"
     },
     "location": {
       "value": "West Europe"

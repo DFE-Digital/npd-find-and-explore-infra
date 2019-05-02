@@ -33,13 +33,13 @@
     }
   },
   "variables": {
-    "serverName": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver')]",
+    "serverName": "[concat('psqldb-', parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver')]",
     "inboundIPAddressArray": "[split(parameters('webAppIPAddresses'), ',')]"
   },
   "resources": [
     {
       "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
-      "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver/fwRule-', copyIndex())]",
+      "name": "[concat(variables('serverName'),'/fwRule-', copyIndex())]",
       "apiVersion": "[parameters('postgresAzureAPIVersion')]",
       "copy": {
         "name": "iterator",
@@ -52,7 +52,7 @@
     },
     {
       "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
-      "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver-staging/fwRule-', copyIndex())]",
+      "name": "[concat(variables('serverName'), '-staging/fwRule-', copyIndex())]",
       "apiVersion": "[parameters('postgresAzureAPIVersion')]",
       "copy": {
         "name": "iterator",

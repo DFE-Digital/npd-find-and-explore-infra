@@ -29,6 +29,7 @@ First, you'll need to login:
 
 ```bash
 az login
+az account set --subscription "DFE T1 Production"
 ```
 
 Then you can run each template in order. For each command you will want to pass:
@@ -53,7 +54,8 @@ az deployment create \
   --template-file 0_resource_groups.json \
   --parameters @_common.parameters.json
 
-RESOURCE_GROUP=s112p01-find-npd-data-persistent-resources
+# This is the resource group assigned by DfE Platform – the typo is necessary.
+RESOURCE_GROUP=rg-t1pr-ndpfindandexplore
 
 # Create the container registry
 az group deployment create \
@@ -61,8 +63,10 @@ az group deployment create \
   --template-file 1_container_registry.json \
   --parameters @_common.parameters.json
 
+AZ_CR_NAME=acrt1prnpdfindandexplore
+
 # Retrieve Azure Container Registry credentials:
-AZ_CR_CRED_JSON=`az acr credential show --name s112p01findnpddata`
+AZ_CR_CRED_JSON=`az acr credential show --name $AZ_CR_NAME`
 AZ_CR_USERNAME=`echo $AZ_CR_CRED_JSON | jq -r '.["username"]'`
 AZ_CR_PASSWORD=`echo $AZ_CR_CRED_JSON | jq -r '.["passwords"][0]["value"]'`
 
@@ -76,8 +80,10 @@ az group deployment create \
   --parameters administratorLogin=npd_admin \
   --parameters administratorLoginPassword=$POSTGRES_ADMIN_PASSWORD \
   --parameters stagingAdministratorLoginPassword=$POSTGRES_ADMIN_PASSWORD_STAGING \
+  --parameters dockerRegistryUrl=https://${AZ_CR_NAME}.azurecr.io \
   --parameters dockerRegistryUsername=$AZ_CR_USERNAME \
   --parameters dockerRegistryPassword=$AZ_CR_PASSWORD \
+  --parameters dockerImageName=${AZ_CR_NAME}.azurecr.io/dfedigitalnpdfindandexplore_web:latest \
   --parameters railsMasterKey=$RAILS_MASTER_KEY \
   --parameters customHostname=find-npd-data.education.gov.uk
 
@@ -113,7 +119,7 @@ az webapp ssh --resource-group s112p01-find-npd-data-persistent-resources --name
 The logs are available through the Azure Portal, or using the following CLI command:
 
 ```bash
-az webapp log tail --resource-group s112p01-find-npd-data-persistent-resources --name s112p01-find-npd-data
+az webapp log tail --resource-group $RESOURCE_GROUP --name app-t1pr-npdfindandexplore
 ```
 
 ## Contributing

@@ -119,7 +119,6 @@
     },
     "dockerRegistryUrl": {
       "type": "string",
-      "defaultValue": "https://s112p01findnpddata.azurecr.io",
       "metadata": {
         "description": "The Docker container registry to use for the Web App"
       }
@@ -138,7 +137,6 @@
     },
     "dockerImageName": {
       "type": "string",
-      "defaultValue": "s112p01findnpddata.azurecr.io/dfedigitalnpdfindandexplore_web:latest",
       "metadata": {
         "description": "The Docker image to use for the Web App"
       }
@@ -158,8 +156,8 @@
   },
   "variables": {
     "databaseName": "[replace(parameters('siteName'), '-', '_')]",
-    "serverName": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver')]",
-    "hostingPlanName": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), 'serviceplan')]"
+    "serverName": "[concat('psqldb-', parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver')]",
+    "hostingPlanName": "[concat('asp-', parameters('resourcePrefix'), '-', parameters('siteName'), 'serviceplan')]"
   },
   "resources": [
     {
@@ -234,7 +232,7 @@
     },
     {
       "type": "Microsoft.Web/sites",
-      "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'))]",
+      "name": "[concat('app-', parameters('resourcePrefix'), '-', parameters('siteName'))]",
       "apiVersion": "2016-03-01",
       "location": "[parameters('location')]",
       "kind": "app,linux,container",
@@ -242,7 +240,7 @@
         "[variables('hostingPlanName')]"
       ],
       "properties": {
-        "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'))]",
+        "name": "[concat('app-', parameters('resourcePrefix'), '-', parameters('siteName'))]",
         "serverFarmId": "[variables('hostingPlanName')]",
         "hostingEnvironment": "",
         "httpsOnly": true,
@@ -333,12 +331,12 @@
     },
     {
       "type": "Microsoft.Web/sites/slots",
-      "name": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '/', parameters('resourcePrefix'), '-staging')]",
+      "name": "[concat('app-', parameters('resourcePrefix'), '-', parameters('siteName'), '/app-', parameters('resourcePrefix'), '-staging')]",
       "apiVersion": "2016-03-01",
       "location": "[parameters('location')]",
       "kind": "app,linux,container",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/Sites', concat(parameters('resourcePrefix'), '-', parameters('siteName')))]"
+        "[resourceId('Microsoft.Web/Sites', concat('app-', parameters('resourcePrefix'), '-', parameters('siteName')))]"
       ],
       "properties": {
         "serverFarmId": "[variables('hostingPlanName')]",
