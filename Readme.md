@@ -66,6 +66,8 @@ AZ_CR_CRED_JSON=`az acr credential show --name s112p01findnpddata`
 AZ_CR_USERNAME=`echo $AZ_CR_CRED_JSON | jq -r '.["username"]'`
 AZ_CR_PASSWORD=`echo $AZ_CR_CRED_JSON | jq -r '.["passwords"][0]["value"]'`
 
+# Note: now is a good time to deploy an image to your container registry
+
 # Create the PostgreSQL database, Web App instance
 az group deployment create \
   --resource-group $RESOURCE_GROUP \
@@ -95,6 +97,8 @@ Don't be worried when your app fails to start. This is expected. You've created 
 ## Important steps after running the templates
 
 1. Enable diagnostic logging on both Web App slots. The templates aren't honoured for application logs, so these need to be set to retain 100Mb (the maximum) and 365 days.
+
+2. Update the Postgres backup retention to 31 days. This is under the "Pricing tier" section in the Azure portal.
 
 ## Connecting to the production system
 
