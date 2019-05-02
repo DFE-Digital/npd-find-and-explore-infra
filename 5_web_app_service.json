@@ -244,6 +244,9 @@
         "serverFarmId": "[variables('hostingPlanName')]",
         "hostingEnvironment": "",
         "httpsOnly": true,
+        "httpLoggingEnabled": true,
+        "logsDirectorySizeLimit": 100,
+        "detailedErrorLoggingEnabled": true,
         "siteConfig": {
           "linuxFxVersion": "[concat('DOCKER|', parameters('dockerImageName'))]",
           "alwaysOn": true,

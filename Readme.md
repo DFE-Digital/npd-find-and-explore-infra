@@ -92,6 +92,10 @@ az group deployment create \
 
 Don't be worried when your app fails to start. This is expected. You've created a container registry and pointed the Web App to use it, however there aren't any images in there yet. At this point, you will want to configure your CI service to deploy the production container it builds to the container registry, and trigger a deploymnt to the Web App instance.
 
+## Important steps after running the templates
+
+1. Enable diagnostic logging on both Web App slots. The templates aren't honoured for application logs, so these need to be set to retain 100Mb (the maximum) and 365 days.
+
 ## Connecting to the production system
 
 > TODO This hung for me in testing... it needs an extra process in the Docker container :/
