@@ -10,6 +10,7 @@ The following have not yet been added to these templates, so should be configure
 - [ ] Azure Blob Store for ActiveStorage
 - [ ] Azure Cache for Redis for background jobs/caching
 - [ ] Bonus points: Azure Search integration
+- [ ] SSH access to Web App Service (see the end of this Readme)
 
 ## Prerequisites
 
@@ -117,7 +118,7 @@ Don't be worried when your app fails to start. This is expected. You've created 
 
 ## Connecting to the production system
 
-> TODO This hung for me in testing... it needs an extra process in the Docker container :/
+> This hung for me in testing... it needs an extra process in the Docker container :/
 
 ```bash
 az webapp ssh --resource-group s112p01-find-npd-data-persistent-resources --name s112p01-find-npd-data
