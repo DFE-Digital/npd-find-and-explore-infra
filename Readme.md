@@ -13,11 +13,20 @@ The following have not yet been added to these templates, so should be configure
 
 ## Prerequisites
 
-TODO
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+- [jq](https://stedolan.github.io/jq/) for the helper scripts in this readme.
+
+These scripts have been tested on MacOS. The ARM templates should work fine on any OS, but you may need to adapt the commands shown here to your operating system.
 
 ## Resources these templates create
 
-TODO
+- 1x Resource Group
+- 1x Container Registry
+- 1x App Service plan
+- 1x App Service (production)
+- 1x Web App (staging)
+- 2x Azure Database for PostgreSQL server
+
 
 ## How to run the templates
 
