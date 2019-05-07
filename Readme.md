@@ -137,6 +137,10 @@ There are a handful of government-specific principles and standards we strive to
 1. [The DfE Coding Principles](https://dfe-digital.github.io/technology-guidance/principles/coding-principles/#coding-principles)
 2. [The GDS Service Standard](https://www.gov.uk/service-manual/service-standard), points 8, 9, and 10 are particularly pertinent. It's also worth referring to the [GDS Service Manual](https://www.gov.uk/service-manual/technology).
 
+### Other DfE environments
+
+This set of templates has been crafted with naming schemes for the DfE CIP Azure tenancy. The `non-cip-azure` branch has an example of the changes you might want to make to fit another naming scheme.
+
 ## License
 
 This project is made available under the terms of the [MIT License](LICENCE.md).
