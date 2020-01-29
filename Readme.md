@@ -35,11 +35,15 @@ The ARM templates are idempotent, so are safe to be run repeatedly. Re-running a
 
 > Note: these templates do not destroy existing resources that don't match the definitions provided, so (for example) renaming a service in the template and re-running it would simply add a second copy of the resource with the new name.
 
+The following instructions and all the files in this branch are set up to be ran in development environment.
+
+To set up the app in the production subscription instead, replace 'development' with 'production' and 's112d01' with 's112p01'.
+
 First, you'll need to login:
 
 ```bash
 az login
-az account set --subscription "DFE T1 Production"
+az account set --subscription "s112-findandexploredatainnpd-development"
 ```
 
 Then you can run each template in order. For each command you will want to pass:
@@ -56,7 +60,7 @@ The following script runs through each ARM template, using environment variables
 ```bash
 POSTGRES_ADMIN_PASSWORD=CHANGE_THIS_TO_A_VERY_SECURE_PASSWORD_^100%
 POSTGRES_ADMIN_PASSWORD_STAGING=CHANGE_THIS_TO_A_DIFFERENT_VERY_SECURE_PASSWORD_^100%
-RAILS_MASTER_KEY=TODO_COPY_FROM_RAILS 
+RAILS_MASTER_KEY=TODO_COPY_FROM_RAILS
 
 # Create the resource group to contain everything
 az deployment create \
@@ -65,7 +69,7 @@ az deployment create \
   --parameters @_common.parameters.json
 
 # This is the resource group assigned by DfE Platform – the typo is necessary.
-RESOURCE_GROUP=rg-t1pr-ndpfindandexplore
+RESOURCE_GROUP=s112d01-find-npd-data-persistent-resources
 
 # Create the container registry
 az group deployment create \
@@ -73,7 +77,7 @@ az group deployment create \
   --template-file 1_container_registry.json \
   --parameters @_common.parameters.json
 
-AZ_CR_NAME=acrt1prnpdfindandexplore
+AZ_CR_NAME=s112d01-find-npd-data
 
 # Retrieve Azure Container Registry credentials:
 AZ_CR_CRED_JSON=`az acr credential show --name $AZ_CR_NAME`
@@ -93,11 +97,11 @@ az group deployment create \
   --parameters dockerRegistryUrl=https://${AZ_CR_NAME}.azurecr.io \
   --parameters dockerRegistryUsername=$AZ_CR_USERNAME \
   --parameters dockerRegistryPassword=$AZ_CR_PASSWORD \
-  --parameters dockerImageName=${AZ_CR_NAME}.azurecr.io/dfedigitalnpdfindandexplore_web:latest \
+  --parameters dockerImageName=${AZ_CR_NAME}.azurecr.io/dfedigital_find_npd_data_web:latest \
   --parameters railsMasterKey=$RAILS_MASTER_KEY \
   --parameters customHostname=find-npd-data.education.gov.uk
 
-# Retrieve WebApp outbound IP addresses 
+# Retrieve WebApp outbound IP addresses
 AZ_WEBAPP_IPS=`az webapp show --resource-group $RESOURCE_GROUP --name s112p01-find-npd-data | jq -r '.["possibleOutboundIpAddresses"]'`
 
 # Lock down the PostgreSQL firewall
@@ -129,7 +133,7 @@ az webapp ssh --resource-group s112p01-find-npd-data-persistent-resources --name
 The logs are available through the Azure Portal, or using the following CLI command:
 
 ```bash
-az webapp log tail --resource-group $RESOURCE_GROUP --name app-t1pr-npdfindandexplore
+az webapp log tail --resource-group $RESOURCE_GROUP --name s112p01-find-npd-data
 ```
 
 ## Contributing
