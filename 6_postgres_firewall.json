@@ -33,7 +33,7 @@
     }
   },
   "variables": {
-    "serverName": "[concat('psqldb-', parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver')]",
+    "serverName": "[concat(parameters('resourcePrefix'), '-', parameters('siteName'), '-pgserver')]",
     "inboundIPAddressArray": "[split(parameters('webAppIPAddresses'), ',')]"
   },
   "resources": [
